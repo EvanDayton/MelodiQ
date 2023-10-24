@@ -1,0 +1,69 @@
+shader-art {
+  z-index: -10;
+  position: fixed; /* or "position: fixed;" depending on your needs */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3000px; /* Set the height to 100vh */
+}
+
+shader-art canvas {
+  width: 100%;
+  height: 100%;
+  height: 2000px; 
+}
+
+* {
+  margin:0;
+}
+
+
+#container {
+  background:url('https://static1.squarespace.com/static/58582592ff7c50828c2f6cad/t/5bad56c38165f52660e11752/1538086595923/Home_Page_Gradient_2.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+  
+}
+
+.contents {
+  height:1000px;
+}
+
+body::after {
+  animation: grain 8s steps(10) infinite;
+  content: "";
+  content: "";
+  height: 300%;
+  left: -50%;
+  opacity: 10;
+  position: fixed;
+  top: -100%;
+  width: 300%;
+  z-index: -1;
+}
+
+@keyframes grain {
+  0%, 100% { transform:translate(0, 0) }
+  10% { transform:translate(-5%, -10%) }
+  20% { transform:translate(-15%, 5%) }
+  30% { transform:translate(7%, -25%) }
+  40% { transform:translate(-5%, 25%) }
+  50% { transform:translate(-15%, 10%) }
+  60% { transform:translate(15%, 0%) }
+  70% { transform:translate(0%, 15%) }
+  80% { transform:translate(3%, 35%) }
+  90% { transform:translate(-10%, 10%) }
+}
+
+shader-art[controls="none"] > div.controls {
+  display: none;
+  z-index: 100;
+}
+
+.dg.ac {
+  display: none !important;
+  z-index: -100;
+}

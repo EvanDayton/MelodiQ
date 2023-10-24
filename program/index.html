@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MelodiQ</title>
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme/theme.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <div id="header-buttons"></div>
+    <img class="header__logo" src="images/Vibrance2.png" alt="Logo"> <a class="header__title">MelodiQ</a>
+    <div class="content">
+      <a id="menu-button"></a>
+      <div id="hamburger-menu">
+        <nav>
+          <a href="/src/index.html">Home</a>
+          <a href="/Contact Us/contactus.html">Contact</a>
+          <button class="logout" id="logout-button" style="display:none;">Logout</button>
+        </nav>
+      </div>
+      <div id="overlay"></div>
+    </div>
+  </header>
+  <label id="hidden-toggle">
+    <input class='toggle-checkbox' type='checkbox'></input>
+    <div class='toggle-slot'>
+      <div class='moon-icon-wrapper'>
+        <div class="iconify moon-icon" data-icon="feather-moon" data-inline="false"></div>
+      </div>
+      <div class='toggle-button'></div>
+      <div class='sun-icon-wrapper'>
+        <div class="iconify sun-icon" data-icon="feather-sun" data-inline="false"></div>
+      </div>
+    </div>
+  </label>  
+    <!-- partial:index.partial.html -->
+<shader-art autoplay id="myShaderArt">
+  <uniform type="float" name="scale" value="4" min="0.1" max="4" step="0.01" />
+  <uniform type="float" name="ax" value="2.2" min="1" max="15" step=".1" />
+  <uniform type="float" name="ay" value="1" min="1" max="15" step=".1" />
+  <uniform type="float" name="az" value="1" min="1" max="15" step=".1" />
+  <uniform type="float" name="aw" value="3.5" min="1" max="15" step=".1" />
+  <uniform type="int" name="numOctaves" value="2" min="1" max="10" step="1" />
+  <uniform type="color" name="color1" value="#3c3c3c" />
+  <uniform type="color" name="color2" value="#000000" />
+  <uniform type="color" name="color3" value="#575757" />
+  <uniform type="color" name="color4" value="#1d4a4a" />
+  
+  <script type="buffer" name="position" data-size="2">
+    [-1, 1, -1,-1, 1,1, 1, 1, -1,-1, 1,-1]
+  </script>
+  <script type="buffer" name="uv" data-size="2">
+    [ 0, 0,  0, 1, 1,0, 1, 0,  0, 1, 1, 1]
+  </script>
+  
+  <script type="vert">
+    precision highp float;
+    attribute vec4 position;
+    attribute vec2 uv;
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = position;
+    }
+  </script>
+  <script type="frag">
+    precision highp float;
+    varying vec2 vUv;
+    uniform float time;
+    uniform float scale;
+    uniform vec2 resolution;
+    uniform vec3 color1, color2, color3, color4;
+    uniform int numOctaves;
+    const float PI = 3.141592654;
+    uniform float ax,ay,az,aw;
+    
+    // just a bunch of sin & cos to generate an interesting pattern
+    float cheapNoise(vec3 stp) {
+      vec3 p = vec3(stp.st, stp.p);
+      vec4 a = vec4(ax, ay, az, aw);
+      return mix(
+        sin(p.z + p.x * a.x + cos(p.x * a.x - p.z)) * 
+        cos(p.z + p.y * a.y + cos(p.y * a.x + p.z)),
+        sin(1. + p.x * a.z + p.z + cos(p.y * a.w - p.z)) * 
+        cos(1. + p.y * a.w + p.z + cos(p.x * a.x + p.z)), 
+        .436
+      );
+    }
+    
+    #define OCTAVES 10
+    float octaveNoise(vec3 stp) {
+      float value = 0.0;
+      float amplitude = .5;
+      for (int i = 0; i < OCTAVES; i++) {
+        value += amplitude * cheapNoise(stp);
+        stp *= vec3(2., 2., 1.);
+        amplitude *= .5;
+        if (i == numOctaves -1) {
+          break;
+        }
+      }
+      return value;
+    }
+        
+    void main() {
+      
+      // this part is basically the same as in https://thebookofshaders.com/13/ by @patriciogv
+      // but with cheapNoise as an input noise.
+      
+      vec2 aR = vec2(resolution.x/resolution.y, 1.);
+      vec2 st = vUv * aR * scale;
+      vec2 v1 = vec2(
+        cheapNoise(vec3(st, 2.)), 
+        octaveNoise(vec3(st, 1.))
+      );
+      vec2 v2 = vec2(
+        cheapNoise(vec3(st + 1.0*v1 + vec2(1.7,9.2), 0.15 * time)),
+        cheapNoise(vec3(st + 1.0*v1 + vec2(8.3,2.8), 0.126 * time))
+      );
+      float n = .5 + .5 * octaveNoise(vec3(st + v2, 0.));
+      
+      vec3 color = mix(color1,
+        color2,
+        clamp((n*n)*4.0,0.0,1.0));
+
+      color = mix(color,
+        color3,
+        clamp(length(v1),0.0,1.0));
+
+      color = mix(color,
+                color4,
+                clamp(length(v2.x),0.0,1.0));
+      
+      color /= n * 2.;
+      gl_FragColor = vec4(color,1.);
+    }
+  </script>
+</shader-art>
+<style>
+  /* Custom CSS to hide the control panel */
+  shader-art[controls="none"] > div.controls {
+    display: none;
+  }
+</style>
+<!-- partial -->
+<script type="module" src="Blurry background Test/script.js"></script>
+<link rel="stylesheet" href="Blurry background Test/style.css"> 
+  <div class="container">
+      <h1>Spotify Stats</h1>
+      <div class="buttons-container">
+        <button class="logout" id="logout-button" style="display:none;">Logout</button>
+        <button class="login">Login with Spotify</button>
+        <button class="fetch-data" id="fetch-artists" style="display:none;">Top Artists</button>
+        <button class="fetch-data" id="fetch-recommendations" style="display:none;">Song Recommendations</button>
+        <button class="fetch-data" id="fetch-songs" style="display:none;">Top Songs</button>
+       
+        <!-- These are the buttons for the time frames for top artists--> 
+        <button class="fetch-data" id="fetch-top-artists-month" style="display:none;">Past Month</button>
+        <button class="fetch-data" id="fetch-top-artists-six-months" style="display:none;">6 Months</button>
+        <button class="fetch-data" id="fetch-top-artists-all-time" style="display:none;">All Time</button> 
+        
+        <!-- These are the buttons for the time frames for top tracks/songs --> 
+        <button class="fetch-data" id="fetch-top-tracks-month" style="display:none;">Past Month</button>
+        <button class="fetch-data" id="fetch-top-tracks-six-months" style="display:none;">6 Months</button>
+        <button class="fetch-data" id="fetch-top-tracks-all-time" style="display:none;">All Time</button> 
+      </div>
+    <main>
+      <section class="top-items">
+        <div class="container">
+          <div class="top-artists">
+            <ul id="top-artists-list"></ul>
+          </div>
+        </div>
+      </section>
+      <section class="top-items">
+        <div class="container">
+          <div class="top-tracks">
+            <ul id="top-tracks-list"></ul>
+          </div>
+        </div>
+      </section>
+      <section class="recommendations" id="recommendations">
+        <div class="container">
+          <div></div>
+          <ul id="recommended-songs-list"></ul>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer>
+    <div class="footer__content">
+      <p>© 2023 MelodiQ. All rights reserved.</p>
+      <div class="footer__logo">
+        <img src="images/Vibrance2.png" alt="Logo">
+      </div>
+    </div>
+  </footer>
+  <script src="scripts.js"></script>
+  <script src="https://code.iconify.design/1/1.0.4/iconify.min.js">   </script>
+  
+</body>
+</html>
