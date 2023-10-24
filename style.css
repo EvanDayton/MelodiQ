@@ -1,0 +1,84 @@
+@import url(https://fonts.googleapis.com/css?family=Fira+Sans:400);
+
+#menu-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: block;
+  width: 50px;
+  height: 50px;
+  background: #111;
+  border-radius: 5px;
+  z-index: 10000;
+}
+
+#menu-button:after {
+  position: absolute;
+  content: "☰";
+  font-size: 42px;
+  color: #FFF;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+}
+
+#menu-button:hover {
+  opacity: .8;
+}
+
+#menu-button.on:after {
+  content: "x";
+}
+
+/* Style for the overlay */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Adjust the background color and opacity as needed */
+  z-index: 999; /* Ensure it's below the menu */
+  display: none; /* Hide it by default */
+}
+
+/* Ensure the overlay is displayed when the menu is open */
+#overlay.open {
+  display: block;
+}
+
+
+#hamburger-menu {
+  position: fixed;
+  top: 20px; /* Adjust the top value to your preference */
+  right: 20px; /* Adjust the right value to your preference */
+  z-index: 1000; /* Ensure it's on top of other elements */
+  display: none; /* Hide it by default */
+}
+
+
+#hamburger-menu nav {
+  padding: 51px;
+  z-index: 101;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+#hamburger-menu nav a {
+  display: block;
+  padding: 7px;
+  height: 2em;
+  color: #CCC;
+  font-size: 1em;
+  line-height: 1em;
+  text-decoration: none;
+  overflow: hidden;
+  margin-left: 24px;
+}
+
+#hamburger-menu nav a:hover {
+  cursor: pointer;
+  color: #FFF;
+  background: rgba(100, 100, 100, 0.02);
+}
