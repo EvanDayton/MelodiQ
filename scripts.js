@@ -2,7 +2,7 @@ const clientId = '776161af11b340bcb769d323a6988497';
 const clientSecret = '3470b32e700542fc9896e26fb568436d';
 
 
-const redirectUri = 'http://localhost:8080/program/index5.html';
+const redirectUri = 'http://melodiq.me/index.html';
 
 const authEndpoint = 'https://accounts.spotify.com/authorize';
 const scopes = ['user-top-read'];
