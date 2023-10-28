@@ -430,7 +430,7 @@ function fetchTopTracks(accessToken) {
         // Create a plays and duration element
         const playsAndDuration = document.createElement('p');
         playsAndDuration.className = 'plays-and-duration';
-        playsAndDuration.innerHTML = `Plays: ${track.popularity} | Duration: ${formatDuration(track.duration_ms)}`;
+        playsAndDuration.innerHTML = `Plays: ${track.popularity}|  Duration: ${formatDuration(track.duration_ms)}`;
 
         // Append elements to the song info container
         songInfo.appendChild(songName);
@@ -487,7 +487,7 @@ function fetchTrackGenre(trackName, artistName, genreElement) {
             .then(artistData => {
               if (!artistData.error && artistData.artist.tags.tag.length > 0) {
                 const artistGenre = artistData.artist.tags.tag[0].name;
-                genreElement.textContent = `Genre: ${artistGenre}`;
+                genreElement.textContent = `Genre: ${artistGenre} |`;
               } else {
                 genreElement.textContent = 'Genre: Not available';
               }
