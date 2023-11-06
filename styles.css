@@ -1,4 +1,89 @@
 /* Reset browser default styles */
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  /* Adjust the font size for smaller screens */
+  h1, h2, h3, h4 {
+    font-size: 30px;
+  }
+
+  /* Center the header elements for smaller screens */
+  .header__logo {
+    overflow-x: hidden;
+    margin-left: 80%;
+    margin-right: auto;
+    align-items: center;
+    display: flex;
+  }
+
+  .header__title {
+    display: none;
+  }
+
+  /* Adjust the button styles for smaller screens */
+  .fetch-data {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+
+  /* Center-align the list items for smaller screens */
+  .list-item-content {
+    text-align: center;
+  }
+
+  .album-art {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* Update the grid layout for top artists */
+  .top-artists ul {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  /* Add more space between the list items */
+  li {
+    margin-bottom: 10px;
+  }
+
+  /* Center-align the footer content for smaller screens */
+  .footer__content {
+    text-align: center;
+  }
+
+  /* Adjust the footer logo size for smaller screens */
+  .footer__logo img {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Update the grid layout for top artists on mobile */
+  .top-artists ul {
+    grid-template-columns: repeat(2, 1fr); /* Display two albums per row */
+  }
+
+  div#header-buttons {
+    z-index: 1000000;
+    margin-left: -9%;
+    margin-top: 76px;
+    scale: .6;
+    margin-bottom: -8px;
+    display: flex;
+    text-align: center;
+  }
+
+  footer {
+    display: flexbox;
+    background-color: #1b1b1b;
+    color: #fff;
+    text-align: center;
+    bottom: 0;
+    padding: 10px;
+    margin-top: 32%;
+    display: block;
+    margin-top: 523px;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
